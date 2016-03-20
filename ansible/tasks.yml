@@ -1,0 +1,43 @@
+---
+## Ansible playbook for privacyidea
+##
+## 
+- name: Install privacyidea server
+  hosts: all
+  user: vagrant
+  become_method: sudo
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: (RPM) Install all required packages
+      yum: "name={{item}} state=present"
+      become: yes
+      with_items: [
+        "git",
+        "python-setuptools"
+        ]
+      when: ansible_os_family  == "RedHat" or ansible_os_family  == "Centos"
+    - name: (DEB) Setup apt repo for privacyidea
+      apt_repository: repo='ppa:privacyidea/privacyidea'
+      become: yes
+      when: ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu'
+    - name: (DEB) Install all required packages
+      apt: "name={{item}} state=present update_cache=yes install_recommends=yes"
+      become: yes
+      with_items: [
+        "nginx",
+        "python-privacyidea",
+        "privacyideaadm"
+        ]
+      when: ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu'
+    - name: (DEB) Install privacyidea nginx integration
+      apt: "name=privacyidea-nginx state=present update_cache=yes install_recommends=yes"
+      become: yes
+      when: ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu'
+    #- name: disable selinux
+    #  selinux: policy=targeted state=permissive
+    #  become: yes
+    - name: (DEB) Create Web UI User
+      command: "pi-manage admin add admin -p password -e admin@localhost"
+      become: yes
+      when: ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu'

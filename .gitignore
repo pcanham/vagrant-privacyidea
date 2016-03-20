@@ -1,0 +1,36 @@
+### python specific
+*.pyc
+
+## generic files to ignore
+*~
+*.lock
+*.swp
+*.out
+
+## eclipse settings
+.project
+
+### puppet module settings from eclipse
+metadata.json
+
+### OSX files which can be ignored
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Vagrant images
+.vagrant
+
+# Sublime Text project files
+*.sublime-project
+*.sublime-workspace
+
+.idea
